@@ -58,15 +58,10 @@
 
 
 
-
-# if __name__ == '__main__':
-# 	app.run('0.0.0.0',port=8080,defug=True)
 from flask import Flask, render_template, request, redirect
-# from werkzeug import secure_filename
+
 import random
 import os
-# from models import db
-# from models import fcuser
 
 app = Flask(__name__, static_folder='static')
 
@@ -95,13 +90,8 @@ def userLogin():
 		return redirect('/')
         
 
-# @app.route('/main', methods=['GET','POST'])
 @app.route('/main')
 def main():
-    # if request.method == 'POST':
-    #     return redirect(url_for('main'))
-    # # 	if request.method == 'POST':
-# # 		return redirect(url_for('main'))
     texts = load_texts('static/texts.txt')
     random_text = random.choice(texts)
     random_image = get_random_image('static/image')
@@ -118,8 +108,7 @@ def random_image(image_id):
 @app.route('/register', methods=['GET','POST'])
 def registerUser():
     if request.method == 'GET':
-        # css_file = f"css/site.css"
-        return render_template("join.html")
+        return render_te  Pmplate("join.html")
     else:
         userId = request.form.get('userId')
         userPassword = request.form.get('userPassword')
