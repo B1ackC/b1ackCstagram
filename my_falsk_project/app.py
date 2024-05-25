@@ -108,7 +108,7 @@ def random_image(image_id):
 @app.route('/register', methods=['GET','POST'])
 def registerUser():
     if request.method == 'GET':
-        return render_te  Pmplate("join.html")
+        return render_template("join.html")
     else:
         userId = request.form.get('userId')
         userPassword = request.form.get('userPassword')
