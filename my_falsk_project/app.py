@@ -92,14 +92,9 @@ def userLogin():
 		print(userPassword)
 		return redirect('/')
         
-
-# @app.route('/main', methods=['GET','POST'])
+        
 @app.route('/main')
 def main():
-    # if request.method == 'POST':
-    #     return redirect(url_for('main'))
-    # # 	if request.method == 'POST':
-# # 		return redirect(url_for('main'))
     texts = load_texts('static/texts.txt')
     random_text = random.choice(texts)
     random_image = get_random_image('static/image')
@@ -116,8 +111,7 @@ def random_image(image_id):
 @app.route('/register', methods=['GET','POST'])
 def registerUser():
     if request.method == 'GET':
-        # css_file = f"css/site.css"
-        return render_template("join.html")
+        return render_te  Pmplate("join.html")
     else:
         userId = request.form.get('userId')
         userPassword = request.form.get('userPassword')
