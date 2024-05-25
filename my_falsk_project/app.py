@@ -111,7 +111,6 @@ def random_image(image_id):
     image_file = f"image/{image_id}.png"
     texts = load_texts('static/texts.txt')
     random_text = texts[image_id - 1]
-    # random_text = image_id(texts)
     return render_template('main.html', random_text=random_text, image_file=image_file)
 
 @app.route('/register', methods=['GET','POST'])
