@@ -77,12 +77,14 @@ def load_texts(filename):
     texts = [text.strip() for text in texts]
     return texts
 
+# 랜덤 이미지 불러오기
 def get_random_image(directory):
     image_files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
     return random.choice(image_files)
 
 @app.route('/', methods=['GET','POST'])
 def userLogin():
+     # TODO: 로그인 기능 구현
 	if request.method == 'GET':
 		return render_template("login.html")
 	else:
