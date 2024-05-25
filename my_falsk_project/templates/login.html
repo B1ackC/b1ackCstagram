@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}"
+    rel="stylesheet"
+  </head>
+  <body>
+    <div class="login-wrapper">
+      <h2>Login</h2>
+      <form method="post" id="login-form">
+        <input type="user_ID" name="userId" placeholder="ID" />
+        <input
+          type="user_Password"
+          name="userPassword"
+          placeholder="Password"
+        />
+        <!-- <label for="remember-check">
+          <input type="checkbox" id="login-remember" /> 아이디 저장
+        </label> -->
+        <label for="join-user">
+          <a style="text-align: right" href="register" target="./join.html"
+            >회원가입</a
+          >
+        </label>
+        <input type="submit" value="Login" />
+      </form>
+    </div>
+  </body>
+</html>

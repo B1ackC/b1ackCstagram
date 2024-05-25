@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시글 작성</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}"
+    rel="stylesheet"
+  </head>
+  <body>
+    <div class="login-wrapper">
+      <h2>게시글 작성</h2>
+      <form method="POST" id="login-form" enctype="multipart/form-data">
+        <a>제목</a>
+        <input
+          type="title"
+          name="title"
+          placeholder="제목을 입력해주세요."
+        />
+        <p>
+          <input type="file" name="file" /></p>
+          <a>내용</a>
+          <input
+            type="content"
+            name="content"
+            placeholder="내용을 입력해주세요"
+          />
+          <!-- <input type="submit" value="취소" /> -->
+          <input type="submit" value="게시글 등록" />
+        </p>
+      </form>
+    </div>
+  </body>
+</html>
