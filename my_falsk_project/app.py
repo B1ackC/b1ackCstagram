@@ -58,15 +58,11 @@
 
 
 
-
-# if __name__ == '__main__':
-# 	app.run('0.0.0.0',port=8080,defug=True)
+)
 from flask import Flask, render_template, request, redirect
-# from werkzeug import secure_filename
+
 import random
 import os
-# from models import db
-# from models import fcuser
 
 app = Flask(__name__, static_folder='static')
 
@@ -92,7 +88,7 @@ def userLogin():
 		print(userPassword)
 		return redirect('/')
         
-        
+
 @app.route('/main')
 def main():
     texts = load_texts('static/texts.txt')
