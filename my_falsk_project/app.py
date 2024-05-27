@@ -65,6 +65,8 @@ import os
 
 app = Flask(__name__, static_folder='static')
 
+users = []
+
 def load_texts(filename):
     with open(filename, 'r') as file:
         texts = file.readlines()
@@ -76,18 +78,6 @@ def load_texts(filename):
 def get_random_image(directory):
     image_files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
     return random.choice(image_files)
-
-@app.route('/', methods=['GET','POST'])
-def userLogin():
-     # TODO: 로그인 기능 구현
-	if request.method == 'GET':
-		return render_template("login.html")
-	else:
-		userId = request.form.get("userId")
-		userPassword = request.form.get('userPassword')
-		print(userId)
-		print(userPassword)
-		return redirect('/')
         
 
 @app.route('/main')
@@ -105,6 +95,20 @@ def random_image(image_id):
     random_text = texts[image_id - 1]
     return render_template('main.html', random_text=random_text, image_file=image_file)
 
+@app.route('/', methods=['GET', 'POST'])
+def userLogin():
+    # TODO: 로그인 기능 구현
+    if request.method == 'GET':
+        return render_template("login.html")
+    else:
+        userId = request.form.get("userId")
+        userPassword = request.form.get('userPassword')
+        for user in users:
+            if user['userId'] == userId and user['userPassword'] == userPassword:
+                return redirect('/main')
+        return redirect('/')
+
+
 @app.route('/register', methods=['GET','POST'])
 def registerUser():
     if request.method == 'GET':
@@ -114,9 +118,13 @@ def registerUser():
         userPassword = request.form.get('userPassword')
         userName = request.form.get('userName')
         # 값 받아오는지 확인
-        print(userId)
-        print(userPassword)
-        print(userName)
+        users.append({
+             'userId': userId,
+             'userPassword': userPassword,
+             'userName': userName
+        })
+
+        print(users)
         # 추후 DB 연동
         return redirect('/')
     
@@ -134,6 +142,8 @@ def postContent():
          return redirect('/post')
     else:
          return redirect('/post')
+    
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)
