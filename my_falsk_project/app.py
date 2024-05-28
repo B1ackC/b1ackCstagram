@@ -1,63 +1,3 @@
-# from flask import Flask, render_template, redirect, request, url_for
-# import random
-
-# app = Flask(__name__)
-# # app.run('0.0.0.0',port=8080,defug=True)
-# # @app.route('/test')
-# # def test():
-# 	# return render_template(image_file="image/1.png")
-# 	# return 'New Page'
-
-# # @app.route('/test2', methods=['GET','POST'])
-# # def test2():
-# # 	if request.method == 'POST':
-# # 		return redirect(url_for('main'))
-# 	# return render_template('main.html')
-# 	# return render_template(image_file="image/1.png")
-
-# def load_texts(filename):
-# 	with open(filename, 'r') as file:
-# 		texts = file.read()
-# 		# texts = [text.strip() for texts in txt_file]
-# 	return texts
-
-# @app.route('/')
-# def index():
-# 	return 'This is Home!'
-
-# @app.route('/test1')
-# def index2():
-# 	# image_path = 'image/1.png'
-# 	texts = load_texts('static/texts.txt')
-# 	# random_text = random.choice(texts)
-# 	return render_template('main.html', texts=texts, image_file="static/image/1.png")\
-	
-# @app.route('/test2')
-# def index3():
-# 	return 'test2'
-
-# @app.route('/random/1')
-# def image1():
-# 	return render_template('main.html', image_file="image/1.png")
-
-# @app.route('/random/2')
-# def image2():
-# 	return render_template('main.html', image_file="image/2.png")
-
-# @app.route('/random/3')
-# def image3():
-# 	return render_template('main.html', image_file="image/3.png")
-
-# @app.route('/random/4')
-# def image4():
-# 	return render_template('main.html', image_file="image/4.png")
-
-# @app.route('/random/5')
-# def image5():
-# 	return render_template('main.html', image_file="image/4.png")
-
-
-
 from flask import Flask, render_template, request, redirect
 
 import random
@@ -66,6 +6,8 @@ import os
 app = Flask(__name__, static_folder='static')
 
 users = []
+posts = []
+
 
 def load_texts(filename):
     with open(filename, 'r') as file:
@@ -126,23 +68,41 @@ def registerUser():
 
         print(users)
         # 추후 DB 연동
-        return redirect('/')
+        return redirect('/post')
     
-@app.route('/post', methods=['GET','POST'])
+@app.route('/post', methods=['GET', 'POST'])
 def postContent():
+    contentNumber = 0
     if request.method == 'GET':
-     return render_template('post.html')
+        return render_template('post.html')
     elif request.method == 'POST':
-         contentTitle = request.form.get('title')
-         contentText = request.form.get('content')
-         imageFile = request.files['file']
-         print(contentTitle)
-         print(contentText)
-         print(imageFile)
-         return redirect('/post')
+        contentNumber += 1
+        contentTitle = request.form.get('title')
+        contentText = request.form.get('content')
+        imageFile = request.files['file']
+
+        if imageFile:
+            # Save the file to the static/uploads directory
+            # filename = imageFile.filename
+            filename = imageFile.filename
+            # filepath = os.path.join('static/uploads', filename)
+            # imageFile.save(filepath)
+        else:
+            filename = None
+        posts.append({
+            'number': contentNumber,
+            'title': contentTitle,
+            'context': contentText,
+            'fileName': filename
+        })
+        return redirect('/board')
     else:
-         return redirect('/post')
-    
+        return redirect('/post')
+
+@app.route('/board', methods=['GET', 'POST'])
+def board():
+    if request.method == 'GET':
+        return render_template('board.html', posts=posts)
 
 
 if __name__ == '__main__':
