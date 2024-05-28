@@ -7,6 +7,7 @@ app = Flask(__name__, static_folder='static')
 
 users = []
 posts = []
+contentNumber = 0
 
 
 def load_texts(filename):
@@ -72,9 +73,12 @@ def registerUser():
     
 @app.route('/post', methods=['GET', 'POST'])
 def postContent():
-    contentNumber = 0
+    #전역변수 사용 선언
+    global contentNumber
     if request.method == 'GET':
+        #요청시 post.html
         return render_template('post.html')
+    #값 입력시 저장
     elif request.method == 'POST':
         contentNumber += 1
         contentTitle = request.form.get('title')
@@ -89,6 +93,7 @@ def postContent():
             # imageFile.save(filepath)
         else:
             filename = None
+        # 배열 데이터 삽입
         posts.append({
             'number': contentNumber,
             'title': contentTitle,
