@@ -11,7 +11,7 @@ section.notice {
 }
 .page-title h3 {
   font-size: 28px;
-  color: #333333;
+  color: #569bff;
   font-weight: 400;
   text-align: center;
 }
@@ -129,26 +129,26 @@ section.notice {
 }
 
 .btn-dark {
-  background: #555;
+  background: #569bff;
   color: #fff;
 }
 
 .btn-dark:hover,
 .btn-dark:focus {
-  background: #373737;
-  border-color: #373737;
+  background: #569bff;
+  border-color: #569bff;
   color: #fff;
 }
 
 .btn-dark {
-  background: #555;
+  background: #569bff;
   color: #fff;
 }
 
 .btn-dark:hover,
 .btn-dark:focus {
-  background: #373737;
-  border-color: #373737;
+  background: #569bff;
+  border-color: #569bff;
   color: #fff;
 }
 

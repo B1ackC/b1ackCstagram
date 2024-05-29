@@ -5,11 +5,29 @@ import os
 
 app = Flask(__name__, static_folder='static')
 
+#전역변수
 users = []
-posts = []
-contentNumber = 0
+
+class Board:
+    def __init__(self):
+        self.posts = []
+    
+    def add_post(self, contentTitle, contentText, filename):
+        self.posts.append({
+            'number': len(self.posts) + 1,  # 클래스 내부 변수 self.posts 사용
+            'title': contentTitle,
+            'context': contentText,
+            'fileName': filename
+        })
+    # def search_post(self, search_term=None):
+    #     if search_term:
+    #         global posts
+    #         return [post for post in self.posts if search_term in str(post['number']) or search_term in post['title'] or search_term in post['context'] or search_term in post['fileName']]
+    #         # return [post for post in self.posts if search_term in post['title'] or search_term in post['context'] or search_term in str(post['number']) or search_term in post['fileName']]
+    #     return self.posts
 
 
+#파일 읽기 
 def load_texts(filename):
     with open(filename, 'r') as file:
         texts = file.readlines()
@@ -22,7 +40,7 @@ def get_random_image(directory):
     image_files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
     return random.choice(image_files)
         
-
+#랜덤 이미지 출력
 @app.route('/main')
 def main():
     texts = load_texts('static/texts.txt')
@@ -30,7 +48,7 @@ def main():
     random_image = get_random_image('static/image')
     return render_template('main.html', random_text=random_text, image_file=f"image/{random_image}")
 
-
+#이미지 1~5
 @app.route('/random/<int:image_id>')
 def random_image(image_id):
     image_file = f"image/{image_id}.png"
@@ -46,6 +64,7 @@ def userLogin():
     else:
         userId = request.form.get("userId")
         userPassword = request.form.get('userPassword')
+        # user id, password 확인 후 로그인
         for user in users:
             if user['userId'] == userId and user['userPassword'] == userPassword:
                 return redirect('/main')
@@ -74,13 +93,11 @@ def registerUser():
 @app.route('/post', methods=['GET', 'POST'])
 def postContent():
     #전역변수 사용 선언
-    global contentNumber
     if request.method == 'GET':
-        #요청시 post.html
         return render_template('post.html')
     #값 입력시 저장
     elif request.method == 'POST':
-        contentNumber += 1
+        # contentNumber = len(posts) + 1
         contentTitle = request.form.get('title')
         contentText = request.form.get('content')
         imageFile = request.files['file']
@@ -94,20 +111,25 @@ def postContent():
         else:
             filename = None
         # 배열 데이터 삽입
-        posts.append({
-            'number': contentNumber,
-            'title': contentTitle,
-            'context': contentText,
-            'fileName': filename
-        })
+        Board.add_post(contentTitle, contentText, filename)
         return redirect('/board')
     else:
         return redirect('/post')
-
+######################
+######################
 @app.route('/board', methods=['GET', 'POST'])
 def board():
     if request.method == 'GET':
-        return render_template('board.html', posts=posts)
+        board = Board()
+        return render_template('board.html', posts=board.posts)
+    if request.method == 'POST':
+        search_term = request.form.get('search')
+        print(search_term)
+        a = Board()
+        filter_posts = a.search_post(search_term)
+        print(filter_posts)
+        return render_template('board.html', posts=filter_posts, search_term=search_term)
+
 
 
 if __name__ == '__main__':

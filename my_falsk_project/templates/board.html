@@ -52,15 +52,14 @@
       <div id="board-search">
         <div class="container">
           <div class="search-window">
-            <form action="">
+            <form method="POST" >
               <div class="search-wrap">
                 <label for="search" class="blind">게시판 내용 검색</label>
                 <input
                   id="search"
                   type="search"
-                  name=""
+                  name="search"
                   placeholder="검색어를 입력해주세요."
-                  value=""
                 />
                 <button type="submit" class="btn btn-dark">검색</button>
               </div>
@@ -83,10 +82,11 @@
             <tbody>
               {% for post in posts %}
               <tr>
-                <td><p>{{ post.number }}</p></td>
-                <td><p>{{ post.title }}</p></td>
-                <td><p>{{ post.context }}</p></td>
-                <td><p>{{ post.fileName }}</p></td>
+                  <td><a href="/random/{{ post.number }}">{{ post.number }}</a></td>
+                  <td><a href="/random/{{ post.number }}">{{ post.title }}</a></td>
+                  <td><p>{{ post.context }}</p></td>
+                  <td><p>{{ post.fileName }}</p></td>
+                </a>
               </tr>
               {% endfor %}
             </tbody>
