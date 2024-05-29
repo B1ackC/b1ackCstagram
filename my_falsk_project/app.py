@@ -7,24 +7,17 @@ app = Flask(__name__, static_folder='static')
 
 #전역변수
 users = []
+posts = []
 
 class Board:
     def __init__(self):
-        self.posts = []
-    
-    def add_post(self, contentTitle, contentText, filename):
-        self.posts.append({
-            'number': len(self.posts) + 1,  # 클래스 내부 변수 self.posts 사용
-            'title': contentTitle,
-            'context': contentText,
-            'fileName': filename
-        })
-    # def search_post(self, search_term=None):
-    #     if search_term:
-    #         global posts
-    #         return [post for post in self.posts if search_term in str(post['number']) or search_term in post['title'] or search_term in post['context'] or search_term in post['fileName']]
-    #         # return [post for post in self.posts if search_term in post['title'] or search_term in post['context'] or search_term in str(post['number']) or search_term in post['fileName']]
-    #     return self.posts
+        self.posts = posts
+
+    def search_post(self, search_term):
+        global posts
+        if search_term:
+            return [post for post in self.posts if search_term in post['title']]
+        return self.posts
 
 
 #파일 읽기 
@@ -93,6 +86,7 @@ def registerUser():
 @app.route('/post', methods=['GET', 'POST'])
 def postContent():
     #전역변수 사용 선언
+    global posts
     if request.method == 'GET':
         return render_template('post.html')
     #값 입력시 저장
@@ -111,24 +105,30 @@ def postContent():
         else:
             filename = None
         # 배열 데이터 삽입
-        Board.add_post(contentTitle, contentText, filename)
+        posts.append({
+            'number': len(posts) + 1,  # 클래스 내부 변수 self.posts 사용
+            'title': contentTitle,
+            'context': contentText,
+            'fileName': filename
+        })
+        # Board.add_post(contentTitle, contentText, filename)
         return redirect('/board')
     else:
         return redirect('/post')
-######################
-######################
+
 @app.route('/board', methods=['GET', 'POST'])
 def board():
     if request.method == 'GET':
         board = Board()
-        return render_template('board.html', posts=board.posts)
+        return render_template('board.html', posts=posts)
     if request.method == 'POST':
+        filter_posts = []
         search_term = request.form.get('search')
         print(search_term)
         a = Board()
         filter_posts = a.search_post(search_term)
-        print(filter_posts)
-        return render_template('board.html', posts=filter_posts, search_term=search_term)
+        print(a.search_post(search_term))
+        return render_template('board.html', posts=a.search_post(search_term), search_term=search_term)
 
 
 
