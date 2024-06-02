@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect
-
 import random
 import os
 
@@ -8,6 +7,7 @@ app = Flask(__name__, static_folder='static')
 #전역변수
 users = []
 posts = []
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 class Board:
     def __init__(self):
@@ -32,7 +32,12 @@ def load_texts(filename):
 def get_random_image(directory):
     image_files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
     return random.choice(image_files)
-        
+
+# 파일 업로드, 확장자 검증
+def allow_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 #랜덤 이미지 출력
 @app.route('/main')
 def main():
@@ -96,12 +101,12 @@ def postContent():
         contentText = request.form.get('content')
         imageFile = request.files['file']
 
-        if imageFile:
-            # Save the file to the static/uploads directory
+        if imageFile and allow_file(imageFile.filename):
+        # if imageFile:
             # filename = imageFile.filename
             filename = imageFile.filename
-            # filepath = os.path.join('static/uploads', filename)
-            # imageFile.save(filepath)
+            filepath = os.path.join('static/upload', imageFile.filename)
+            imageFile.save(filepath)
         else:
             filename = None
         # 배열 데이터 삽입
@@ -122,11 +127,11 @@ def board():
         board = Board()
         return render_template('board.html', posts=posts)
     if request.method == 'POST':
-        filter_posts = []
+        # filter_posts = []
         search_term = request.form.get('search')
         print(search_term)
         a = Board()
-        filter_posts = a.search_post(search_term)
+        # filter_posts = a.search_post(search_term)
         print(a.search_post(search_term))
         return render_template('board.html', posts=a.search_post(search_term), search_term=search_term)
 
