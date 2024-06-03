@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect
 import random
 import os
 from src.data.format import users, posts
+from src.data.db import DBconfig
+
 # from src.data import post
 # from src.data.post import Post
 # from src.store.store import Store
@@ -11,6 +13,9 @@ app = Flask(__name__, static_folder='static')
 users = []
 posts = []
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+test = DBConfig()
+print(test.get_engine())
 
 #파일 읽기 
 def load_texts(filename):
