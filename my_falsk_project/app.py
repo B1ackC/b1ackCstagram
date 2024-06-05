@@ -1,21 +1,12 @@
 from flask import Flask, render_template, request, redirect
-import random
-import os
+import random, os
 from src.data.format import users, posts
-from src.data.db import DBconfig
-
-# from src.data import post
-# from src.data.post import Post
-# from src.store.store import Store
+from src.data.db import DBcreate
 
 app = Flask(__name__, static_folder='static')
-#전역변수
-users = []
 posts = []
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
-test = DBConfig()
-print(test.get_engine())
 
 #파일 읽기 
 def load_texts(filename):
@@ -75,14 +66,9 @@ def postRegister():
     userId = request.form.get('userId')
     userPassword = request.form.get('userPassword')
     userName = request.form.get('userName')
-    # 값 받아오는지 확인
-    users.append({
-        'userId': userId,
-        'userPassword': userPassword,
-        'userName': userName
-    })
+    # DB 데이터 insert
+    DBcreate().add_user(userId, userPassword, userName)
     return redirect('/post')
-
 #게시글 작성
 @app.get('/post')
 def getPosts():
