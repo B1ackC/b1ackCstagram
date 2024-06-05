@@ -29,7 +29,13 @@
           name="userName"
           placeholder="이름을 입력해주세요"
         />
+                      {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <label class="error-message">{{ messages[0] }}</label>
+                {% endif %}
+            {% endwith %}
         <input type="submit" value="회원가입" />
+
       </form>
     </div>
   </body>

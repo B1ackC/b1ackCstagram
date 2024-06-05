@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.data.table import user
+from flask import flash, redirect
 
 class DBconfig:
     def __init__(self):
@@ -14,14 +15,18 @@ class DBconfig:
         self.db_url = f"mysql+pymysql://{self.db['user']}:{self.db['password']}@{self.db['host']}:{self.db['port']}/{self.db['database']}"
         self.engine = create_engine(self.db_url)
         self.Session = sessionmaker(bind=self.engine)
-    def get_session(self):
-        return self.Session()
 
 class DBcreate:
     def __init__(self):
-        self.session = DBconfig().get_session()
+        self.session = DBconfig().Session()
     def add_user(self, userId, userPassword, userName):
-        new_user = user(userId=userId, userPassword=userPassword, userName=userName)
-        self.session.add(new_user)
+        searchUser = self.session.query(user).filter_by(userId=userId).first()
+        if searchUser is not None:
+            flash("이미 존재하는 아이디입니다.")
+            return False
+        insertUser = user(userId=userId, userPassword=userPassword, userName=userName)
+        self.session.add(insertUser)
         self.session.commit()
         self.session.close()
+        return True
+

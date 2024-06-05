@@ -7,7 +7,7 @@ body {
   font-size: 14px;
   font-family: "Roboto", sans-serif;
 }
-a {
+#login-form > a {
   color: #999999;
   text-decoration: none;
 }
@@ -21,7 +21,10 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
+.error-message {
+  color: #FF0000;
+  font-size: 12px;
+}
 .login-wrapper > h2 {
   font-size: 24px;
   color: #569bff;
@@ -48,13 +51,14 @@ a {
 #login-form > input[type="checkbox"] {
   display: none;
 }
-#login-form > label {
+.login-form > label {
   color: #999999;
 }
-#login-form > a {
-  color: #999999;
-  text-decoration: none;
-}
+/*#login-form > a {*/
+/*  color: #999999;*/
+/*  text-decoration: none;*/
+/*}*/
+
 /* #login-form input[type="checkbox"] + label {
   cursor: pointer;
   padding-left: 26px;

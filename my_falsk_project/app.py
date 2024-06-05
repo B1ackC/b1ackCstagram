@@ -4,6 +4,7 @@ from src.data.format import users, posts
 from src.data.db import DBcreate
 
 app = Flask(__name__, static_folder='static')
+app.secret_key = os.urandom(24)
 posts = []
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
@@ -66,9 +67,10 @@ def postRegister():
     userId = request.form.get('userId')
     userPassword = request.form.get('userPassword')
     userName = request.form.get('userName')
-    # DB 데이터 insert
-    DBcreate().add_user(userId, userPassword, userName)
-    return redirect('/post')
+    if DBcreate().add_user(userId, userPassword, userName):
+        return redirect('/board')
+    else:
+        return redirect('/register')
 #게시글 작성
 @app.get('/post')
 def getPosts():
