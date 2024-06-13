@@ -1,73 +1,46 @@
-from flask import Flask, render_template, request, redirect
-import random, os
-from src.data.format import users, posts
-from src.data.db import DBcreate
+from flask import Flask, render_template, request, redirect, session
+import os
+from src.data.format import PostInputDto, UserInputDto
+from src.data.db.db import DBuser
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = os.urandom(24)
+# app.secret_key = os.urandom(24)
 posts = []
+
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-
-
-#파일 읽기 
-def load_texts(filename):
-    with open(filename, 'r') as file:
-        texts = file.readlines()
-    # 각 줄 끝의 줄바꿈 문자를 제거
-    texts = [text.strip() for text in texts]
-    return texts
-
-# 랜덤 이미지 불러오기
-def get_random_image(directory):
-    image_files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
-    return random.choice(image_files)
-
-# 파일 업로드, 확장자 검증
+# 파일 허용
 def allow_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-#랜덤 이미지 출력
-@app.get('/main')
-def main():
-    texts = load_texts('static/texts.txt')
-    random_text = random.choice(texts)
-    random_image = get_random_image('static/image')
-    return render_template('main.html', random_text=random_text, image_file=f"image/{random_image}")
-
-#이미지 1~5
-@app.get('/random/<int:image_id>')
-def random_image(image_id):
-    image_file = f"image/{image_id}.png"
-    texts = load_texts('static/texts.txt')
-    random_text = texts[image_id - 1]
-    return render_template('main.html', random_text=random_text, image_file=image_file)
-
-#로그인
+# method: GET / 로그인
 @app.get('/')
 def getLogin():
     return render_template('login.html')
 
+# method: POST / 로그인
+# request: userId, userPassword
 @app.post('/')
 def postLogin():
-    userId = request.form.get('userId')
-    userPassword = request.form.get('userPassword')
-    for user in users:
-        if user['userId'] == userId and user['userPassword'] == userPassword:
-            return redirect('/main')
+    user = user_login(request)
+
+    if(user is not False):
+        session['userId'] = user.userId
+        return redirect('/board')
+
     return redirect('/')
 
-#회원가입
 @app.get('/register')
 def getRegister():
     return render_template('join.html')
 
 @app.post('/register')
 def postRegister():
-    userId = request.form.get('userId')
-    userPassword = request.form.get('userPassword')
-    userName = request.form.get('userName')
-    if DBcreate().add_user(userId, userPassword, userName):
+    loginInfo = UserInputDto.requestFrom(request)
+
+
+    if DBuser().add_user_from_dto(loginInfo):
         return redirect('/board')
     else:
         return redirect('/register')
@@ -78,6 +51,8 @@ def getPosts():
 
 @app.post('/post')
 def insertPosts():
+    postInfo = PostInputDto.requestForm(request)
+    if post_insert(postInfo):
         global posts
         contentTitle = request.form.get('title')
         contentText = request.form.get('content')
@@ -101,7 +76,8 @@ def insertPosts():
 #게시글 보기
 @app.get('/board')
 def getBoard():
-    return render_template('board.html', posts=posts)
+    userId = session.get('userId')
+    return render_template('board.html', posts=posts, userId=userId)
 
 @app.post('/board')
 def searchPost():

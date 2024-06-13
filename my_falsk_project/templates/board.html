@@ -14,6 +14,9 @@
       <div class="page-title">
         <div class="container">
           <h3>게시판</h3>
+            {% if userId %}
+            {{ userId }}님 환영합니다.
+            {% endif %}
         </div>
       </div>
       <!-- board search area -->
