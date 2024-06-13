@@ -1,6 +1,6 @@
 import pymysql
 
-class config:
+class dbConfig:
     def __init__(self):
         self.db = pymysql.connect(
             user='root',
@@ -10,16 +10,17 @@ class config:
             db='blackc',
             charset='utf8'
         )
-    # def cursor(self):
-    #     return self.db.cursor()
+        self.cursor = self.db.cursor()
 
-test = config().db.cursor()
-print(test)
-#
+    def fetchall(self, sql):
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
+
+    def close(self):
+        self.cursor.close()
+
+db = dbConfig()
 sql = "SELECT * FROM TB_USERS"
-test.execute(sql)
-print(test.execute(sql))
-#
-rows = test.fetchall()
-print (rows)
-test.close()
+
+print(db.fetchall(sql))
+db.close()
