@@ -4,7 +4,7 @@ from src.data.format import PostInputDto, UserInputDto
 from src.db.db import DBuser
 
 app = Flask(__name__, static_folder='static')
-# app.secret_key = os.urandom(24)
+app.secret_key = os.urandom(24)
 # posts = []
 
 #
@@ -38,7 +38,7 @@ def getRegister():
 @app.post('/register')
 def postRegister():
     loginInfo = UserInputDto.requestFrom(request)
-
+    print (loginInfo)
 
     if DBuser().add_user_from_dto(loginInfo):
         return redirect('/')

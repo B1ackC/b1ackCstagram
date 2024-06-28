@@ -1,14 +1,16 @@
 from .config import dbConfig
-from flask import flash
 
 class DBuser:
     def __init__(self):
         self.connect = dbConfig()
 
     def add_user_from_dto(self, userDto):
-        sql = f"INSERT INTO TB_USERS VALUES('{userDto.userId}', '{userDto.userPassword}', '{userDto.userName}')"
+        print (userDto)
+        print (userDto.userId, userDto.userPassword, userDto.userName)
+        sql = f"INSERT INTO TB_USERS (userId, userPassword, userName)  VALUES('{userDto.userId}', '{userDto.userPassword}', '{userDto.userName}')"
+        print(sql)
         try:
-            self.connect.cursor.execute(sql)
+            self.connect.fetchall(sql)
             self.connect.db.commit()
             return True
         except Exception as e:
