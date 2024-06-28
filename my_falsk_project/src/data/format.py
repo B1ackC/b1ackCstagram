@@ -1,7 +1,6 @@
-from pydantic import BaseModel, Field
 from dataclasses import dataclass
 from flask import session
-from .logic import encryption
+
 
 @dataclass
 class users:

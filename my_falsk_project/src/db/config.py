@@ -19,8 +19,8 @@ class dbConfig:
     def close(self):
         self.cursor.close()
 
-db = dbConfig()
-sql = "SELECT * FROM TB_USERS"
-
-print(db.fetchall(sql))
-db.close()
+# db = dbConfig()
+# sql = "SELECT * FROM TB_USERS"
+#
+# print(db.fetchall(sql))
+# db.close()
